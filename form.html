@@ -644,7 +644,7 @@ form.addEventListener("submit", async (e) => {
 await addDoc(regsRef, data);
 
 try {
-    const response = await fetch("http://localhost:3000/send-confirmation", {
+    const response = await fetch("https://mukand-utsav.production.up.railway.app/send-confirmation", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
