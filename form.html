@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mukand Utsav Registration</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+    theme:{
+        extend:{
+            colors:{
+                'glow-pink':'#ff2d75',
+                'glow-purple':'#9d4edd',
+                'glow-orange':'#ff8c42',
+                'dark-bg':'#0a0a0f'
+            }
+        }
+    }
+}
+</script>
+
+<style>
+body{font-family:'Roboto',sans-serif;}
+h1,h2{font-family:'Poppins',sans-serif;}
+
+.gradient-text{
+    background:linear-gradient(90deg,#ff2d75,#9d4edd,#ff8c42);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color:transparent;
+}
+
+.glass{
+    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);
+    background:rgba(18,18,26,0.7);
+    border:1px solid rgba(157,78,221,0.3);
+}
+
+    .input{
+    background-color:#12121a;
+    color:#ffffff;
+    border:1px solid #2a2a3a;
+}
+
+.input option{
+    background-color:#12121a;
+    color:#ffffff;
+}
+
+.input:focus{
+    outline:none;
+    border-color:#9d4edd;
+    box-shadow:0 0 10px rgba(157,78,221,0.5);
+}
+
+.glow-btn{
+    background:linear-gradient(135deg,#ff2d75,#ff8c42);
+    transition:0.3s;
+}
+.glow-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 25px rgba(255,45,117,0.7);
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Custom dropdown theme to match site */
+#collegeDropdown{
+    background: rgba(18,18,26,0.95);
+    border: 1px solid rgba(157,78,221,0.12);
+    box-shadow: 0 10px 30px rgba(4,4,8,0.6);
+}
+#collegeDropdown input{
+    background:#0f0f14;
+    color:#e6edf3;
+    border:1px solid rgba(42,42,58,0.6);
+}
+#collegeOptions li{
+    background:transparent;
+    color: #e6edf3;
+}
+#collegeOptions li:hover{
+    background: linear-gradient(90deg, rgba(255,45,117,0.06), rgba(157,78,221,0.04));
+}
+#collegeToggle{
+    background:#12121a;
+}
+#collegeOther{
+    background:#12121a;
+}
+</style>
+</head>
+
+<body class="bg-dark-bg text-gray-200">
+
+<div class="max-w-3xl mx-auto py-12 px-4">
+
+<h1 class="text-4xl font-bold text-center gradient-text mb-8">
+Mukand Utsav 2026 Registration
+</h1>
+
+<div class="glass rounded-2xl p-8">
+
+<form id="registrationForm">
+
+    <!-- Form message area (errors / success) -->
+    <div id="formMessage" class="text-center text-sm mb-4"></div>
+
+<!-- Event Selection -->
+<label class="block mb-2">Event Selection</label>
+<select name="event" required class="w-full p-3 rounded-lg input mb-6" aria-label="Event Selection">
+    <option value="">Select Event</option>
+    <option>Digital Art Fiesta</option>
+    <option>DIY Floral Splash</option>
+    <option>Antakshari – Holi Edition</option>
+    <option>Documentary on Women Empowerment</option>
+    <option>Rainbow Rush</option>
+    <option>Science Exhibition & Ethnic Beads</option>
+</select>
+
+
+<!-- Basic Details -->
+<label for="fullname">Full Name</label>
+<input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required class="w-full p-3 rounded-lg input mb-4">
+
+<label for="mobile">Mobile Number</label>
+<input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required class="w-full p-3 rounded-lg input mb-4">
+
+<label for="email">Email Address</label>
+<input id="email" type="email" name="email" placeholder="Enter your email address" required class="w-full p-3 rounded-lg input mb-4">
+
+<label class="block mb-2">College</label>
+
+<!-- Hidden select kept for form submission; we'll sync value into it -->
+<select name="college" id="collegeList" required title="College" aria-label="College" class="hidden">
+    <option value="" disabled selected>Select College</option>
+    <option>Mukand Lal National College, Yamunanagar (MLN College)</option>
+    <option>MLN College Radaur (Mukand Lal National College)</option>
+    <option>TIMT Yamunanagar (Tilak Raj Chadha Institute of Management & Technology)</option>
+    <option>JMIT Radaur (Jai Prakash Mukand Lal Institute of Engineering and Technology)</option>
+    <option>JMIETI Radaur (Jai Parkash Mukand Lal Innovative Engineering & Technology Institute)</option>
+    <option>SJPP Damla (Seth Jai Prakash Polytechnic)</option>
+</select>
+
+<!-- Visible custom control -->
+<div class="relative mb-4">
+    <button type="button" id="collegeToggle" class="w-full text-left p-3 rounded-lg input flex items-center justify-between">
+        <span id="collegeLabel">Select College</span>
+        <i class="fas fa-chevron-down text-gray-400"></i>
+    </button>
+
+    <!-- Dropdown panel -->
+    <div id="collegeDropdown" class="hidden absolute left-0 right-0 mt-2 bg-card-dark rounded-lg shadow-lg border border-border-glow z-50">
+        <div class="p-3">
+            <input id="collegeSearch" type="search" placeholder="Search college..." class="w-full p-2 rounded-md bg-[#0f0f14] border border-gray-700 text-gray-200 focus:outline-none" />
+        </div>
+        <ul id="collegeOptions" class="max-h-56 overflow-auto divide-y divide-gray-800">
+            <!-- Options will be cloned here from the hidden select -->
+        </ul>
+    </div>
+</div>
+
+<!-- If 'Other' selected, show this input -->
+<input type="text" id="collegeOther" placeholder="Enter your college name" aria-label="Other college" class="w-full p-3 rounded-lg input mb-4 hidden" />
+
+<label for="course">Course</label>
+<input id="course" type="text" name="course" placeholder="e.g., B.Sc, B.Tech" class="w-full p-3 rounded-lg input mb-4">
+
+<label for="year">Year</label>
+<input id="year" type="text" name="year" placeholder="e.g., 1st, 2nd" class="w-full p-3 rounded-lg input mb-4">
+
+<label for="rollno">Institute Roll Number</label>
+<input id="rollno" type="text" name="rollno" placeholder="Enter roll number" class="w-full p-3 rounded-lg input mb-6">
+
+<!-- Team Member Details -->
+<div id="teamSection" class="hidden">
+    <h2 class="text-xl font-semibold mb-3">Team Member Details</h2>
+    
+    <!-- Member 1 (for events with 2 members) -->
+    <div id="member1" class="hidden">
+        <h3 class="text-lg font-medium mb-2">Team Member 1</h3>
+        <label for="member1_name">Full Name</label>
+        <input id="member1_name" type="text" name="member1_name" placeholder="Member 1 full name" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member1_mobile">Mobile Number</label>
+        <input id="member1_mobile" type="tel" name="member1_mobile" placeholder="Member 1 mobile" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member1_email">Email Address</label>
+        <input id="member1_email" type="email" name="member1_email" placeholder="Member 1 email" class="w-full p-3 rounded-lg input mb-4">
+    </div>
+    
+    <!-- Member 2 (team member) -->
+    <div id="member2" class="hidden">
+        <h3 class="text-lg font-medium mb-2">Team Member 2</h3>
+        <label for="member2_name">Full Name</label>
+        <input id="member2_name" type="text" name="member2_name" placeholder="Member 2 full name" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member2_mobile">Mobile Number</label>
+        <input id="member2_mobile" type="tel" name="member2_mobile" placeholder="Member 2 mobile" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member2_email">Email Address</label>
+        <input id="member2_email" type="email" name="member2_email" placeholder="Member 2 email" class="w-full p-3 rounded-lg input mb-4">
+    </div>
+
+    <!-- Member 3 -->
+    <div id="member3" class="hidden">
+        <h3 class="text-lg font-medium mb-2">Team Member 3</h3>
+        <label for="member3_name">Full Name</label>
+        <input id="member3_name" type="text" name="member3_name" placeholder="Member 3 full name" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member3_mobile">Mobile Number</label>
+        <input id="member3_mobile" type="tel" name="member3_mobile" placeholder="Member 3 mobile" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member3_email">Email Address</label>
+        <input id="member3_email" type="email" name="member3_email" placeholder="Member 3 email" class="w-full p-3 rounded-lg input mb-4">
+    </div>
+
+    <!-- Member 4 -->
+    <div id="member4" class="hidden">
+        <h3 class="text-lg font-medium mb-2">Team Member 4</h3>
+        <label for="member4_name">Full Name</label>
+        <input id="member4_name" type="text" name="member4_name" placeholder="Member 4 full name" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member4_mobile">Mobile Number</label>
+        <input id="member4_mobile" type="tel" name="member4_mobile" placeholder="Member 4 mobile" class="w-full p-3 rounded-lg input mb-3">
+        
+        <label for="member4_email">Email Address</label>
+        <input id="member4_email" type="email" name="member4_email" placeholder="Member 4 email" class="w-full p-3 rounded-lg input mb-4">
+    </div>
+    
+    <label for="team_cool_name">Team Cool Name</label>
+    <input id="team_cool_name" type="text" name="team_cool_name" placeholder="Cool Team Name" class="w-full p-3 rounded-lg input mb-6">
+</div>
+
+<!-- Declaration -->
+<div class="flex items-start gap-3 mb-6">
+<input id="declaration" type="checkbox" required class="mt-1">
+<label for="declaration" class="text-sm text-gray-400">
+I confirm that the information provided is correct and I agree to follow event rules.
+</label>
+</div>
+
+<div class="text-center">
+<button type="submit" 
+class="glow-btn text-white font-bold py-3 px-10 rounded-full text-lg">
+<span class="spinner hidden" id="loadingSpinner"></span>
+<span id="buttonText">Submit Registration</span>
+</button>
+</div>
+
+</form>
+</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const hiddenSelect = document.getElementById('collegeList');
+    const collegeToggle = document.getElementById('collegeToggle');
+    const collegeDropdown = document.getElementById('collegeDropdown');
+    const collegeSearch = document.getElementById('collegeSearch');
+    const collegeOptions = document.getElementById('collegeOptions');
+    const collegeLabel = document.getElementById('collegeLabel');
+    const collegeOther = document.getElementById('collegeOther');
+
+    // Build option list from hidden select (skip disabled placeholder)
+    Array.from(hiddenSelect.options).forEach(opt => {
+        if (opt.disabled) return;
+        const li = document.createElement('li');
+        li.className = 'px-4 py-2 cursor-pointer hover:bg-white/5 text-gray-200';
+        li.textContent = opt.textContent;
+        li.dataset.value = opt.value || opt.textContent;
+        collegeOptions.appendChild(li);
+
+        li.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const text = this.textContent.trim();
+            collegeLabel.textContent = text;
+            if (text === 'Other') {
+                collegeOther.classList.remove('hidden');
+                hiddenSelect.value = '';
+                collegeOther.focus();
+            } else {
+                collegeOther.classList.add('hidden');
+                hiddenSelect.value = text;
+            }
+            collegeDropdown.classList.add('hidden');
+        });
+    });
+
+    // Toggle dropdown
+    collegeToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        collegeDropdown.classList.toggle('hidden');
+        if (!collegeDropdown.classList.contains('hidden')) {
+            collegeSearch.value = '';
+            filterList();
+            collegeSearch.focus();
+        }
+    });
+
+    function filterList() {
+        const q = collegeSearch.value.toLowerCase();
+        Array.from(collegeOptions.children).forEach(li => {
+            li.style.display = li.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+
+    collegeSearch.addEventListener('input', filterList);
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#collegeDropdown') && !e.target.closest('#collegeToggle')) {
+            collegeDropdown.classList.add('hidden');
+        }
+    });
+
+    // Sync 'Other' text to hidden select
+    collegeOther.addEventListener('input', function() {
+        hiddenSelect.value = this.value;
+    });
+
+    // Initialize label if select already has value
+    if (hiddenSelect.value && hiddenSelect.value !== '') {
+        collegeLabel.textContent = hiddenSelect.value;
+        if (hiddenSelect.value !== 'Other') collegeOther.classList.add('hidden');
+    }
+
+    // Event selection handler
+    const eventSelect = document.querySelector('select[name="event"]');
+    eventSelect.addEventListener('change', function() {
+        const selectedEvent = this.value;
+        const teamSection = document.getElementById('teamSection');
+        const member1 = document.getElementById('member1');
+        const member2 = document.getElementById('member2');
+        const member3 = document.getElementById('member3');
+        const member4 = document.getElementById('member4');
+        
+        // Hide all by default
+        member1.classList.add('hidden');
+        member2.classList.add('hidden');
+        member3.classList.add('hidden');
+        member4.classList.add('hidden');
+
+        if (selectedEvent === 'Digital Art Fiesta') {
+            teamSection.classList.add('hidden');
+        } else {
+            teamSection.classList.remove('hidden');
+
+            // Antakshari requires 1 leader + 4 members
+            if (selectedEvent === 'Antakshari – Holi Edition') {
+                member1.classList.remove('hidden');
+                member2.classList.remove('hidden');
+                member3.classList.remove('hidden');
+                member4.classList.remove('hidden');
+            } else if (selectedEvent === 'Rainbow Rush') {
+                member1.classList.remove('hidden');
+                member2.classList.remove('hidden');
+            } else {
+                member1.classList.remove('hidden');
+                member2.classList.add('hidden');
+            }
+        }
+    });
+});
+</script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, runTransaction, doc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBYV4vB5PTO1v_KthmiwFB5tr6UmII40i8",
+  authDomain: "mukand-utsav.firebaseapp.com",
+  projectId: "mukand-utsav",
+  storageBucket: "mukand-utsav.firebasestorage.app",
+  messagingSenderId: "442405602602",
+  appId: "1:442405602602:web:d033590094bd48e6ed8a53"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const collegeCodes = {
+    "Mukand Lal National College, Yamunanagar (MLN College)": "MLNC",
+    "MLN College Radaur (Mukand Lal National College)": "MLNR",
+    "TIMT Yamunanagar (Tilak Raj Chadha Institute of Management & Technology)": "TIMT",
+    "JMIT Radaur (Jai Prakash Mukand Lal Institute of Engineering and Technology)": "JMIT",
+    "JMIETI Radaur (Jai Parkash Mukand Lal Innovative Engineering & Technology Institute)": "JMIE",
+    "SJPP Damla (Seth Jai Prakash Polytechnic)": "SJPP"
+};
+
+const eventCodes = {
+    "Digital Art Fiesta": "01",
+    "DIY Floral Splash": "02",
+    "Antakshari – Holi Edition": "03",
+    "Documentary on Women Empowerment": "04",
+    "Rainbow Rush": "05",
+    "Science Exhibition & Ethnic Beads": "06"
+};
+
+const form = document.getElementById("registrationForm");
+const formMessage = document.getElementById('formMessage');
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Disable submit while processing
+    const submitBtn = form.querySelector("button[type='submit']");
+    const spinner = document.getElementById('loadingSpinner');
+    const buttonText = document.getElementById('buttonText');
+    
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+    spinner.classList.remove('hidden');
+    formMessage.textContent = '';
+
+    try {
+        const eventVal = document.querySelector("[name='event']").value.trim();
+        const fullname = document.querySelector("[name='fullname']").value.trim();
+        const mobileRaw = document.querySelector("[name='mobile']").value.trim();
+        const emailRaw = document.querySelector("[name='email']").value.trim();
+
+        // Basic normalization
+        const email = emailRaw.toLowerCase();
+        const mobile = mobileRaw.replace(/\D/g, ''); // keep digits only
+
+        if (!eventVal || !fullname || !mobile || !email) {
+            formMessage.textContent = 'Please fill all required fields.';
+            formMessage.className = 'text-center text-sm text-yellow-300 mb-4';
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            spinner.classList.add('hidden');
+            return;
+        }
+
+        const regsRef = collection(db, 'registrations');
+
+        // helper checks to detect duplicates in either legacy top-level fields or new team arrays
+        async function emailExists(emailToCheck) {
+            if (!emailToCheck) return false;
+            const q1 = query(regsRef, where('email', '==', emailToCheck));
+            const r1 = await getDocs(q1);
+            if (!r1.empty) return true;
+            const q2 = query(regsRef, where('members_emails', 'array-contains', emailToCheck));
+            const r2 = await getDocs(q2);
+            return !r2.empty;
+        }
+
+        async function mobileExists(mobileToCheck) {
+            if (!mobileToCheck) return false;
+            const q1 = query(regsRef, where('mobile', '==', mobileToCheck));
+            const r1 = await getDocs(q1);
+            if (!r1.empty) return true;
+            const q2 = query(regsRef, where('members_mobiles', 'array-contains', mobileToCheck));
+            const r2 = await getDocs(q2);
+            return !r2.empty;
+        }
+
+        const data = {
+            event: eventVal,
+            college: document.querySelector("[name='college']").value,
+            course: document.querySelector("[name='course']").value,
+            year: document.querySelector("[name='year']").value,
+            rollno: document.querySelector("[name='rollno']").value,
+            createdAt: new Date()
+        };
+
+        // If Antakshari — require 1 leader + 4 members
+        if (eventVal === 'Antakshari – Holi Edition') {
+            const m1 = document.querySelector("[name='member1_name']").value.trim();
+            const m1m = (document.querySelector("[name='member1_mobile']").value || '').replace(/\D/g,'');
+            const m1e = (document.querySelector("[name='member1_email']").value || '').toLowerCase().trim();
+
+            const m2 = document.querySelector("[name='member2_name']").value.trim();
+            const m2m = (document.querySelector("[name='member2_mobile']").value || '').replace(/\D/g,'');
+            const m2e = (document.querySelector("[name='member2_email']").value || '').toLowerCase().trim();
+
+            const m3 = document.querySelector("[name='member3_name']").value.trim();
+            const m3m = (document.querySelector("[name='member3_mobile']").value || '').replace(/\D/g,'');
+            const m3e = (document.querySelector("[name='member3_email']").value || '').toLowerCase().trim();
+
+            const m4 = document.querySelector("[name='member4_name']").value.trim();
+            const m4m = (document.querySelector("[name='member4_mobile']").value || '').replace(/\D/g,'');
+            const m4e = (document.querySelector("[name='member4_email']").value || '').toLowerCase().trim();
+
+            // require leader and all four members' name/mobile/email
+            if (!fullname || !mobile || !email || !m1 || !m1m || !m1e || !m2 || !m2m || !m2e || !m3 || !m3m || !m3e || !m4 || !m4m || !m4e) {
+                formMessage.textContent = 'Antakshari requires a team leader and 4 members. Please fill all details.';
+                formMessage.className = 'text-center text-sm text-yellow-300 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                return;
+            }
+
+            // Check duplicates for leader
+            if (await emailExists(email)) {
+                formMessage.textContent = `Email ${email} is already registered.`;
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            if (await mobileExists(mobile)) {
+                formMessage.textContent = `Mobile ${mobile} is already registered.`;
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Check duplicates for each member
+            const members = [
+                { name: m1, mobile: m1m, email: m1e },
+                { name: m2, mobile: m2m, email: m2e },
+                { name: m3, mobile: m3m, email: m3e },
+                { name: m4, mobile: m4m, email: m4e }
+            ];
+
+            for (const mem of members) {
+                if (await emailExists(mem.email)) {
+                    formMessage.textContent = `Email ${mem.email} is already registered.`;
+                    formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    spinner.classList.add('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                if (await mobileExists(mem.mobile)) {
+                    formMessage.textContent = `Mobile ${mem.mobile} is already registered.`;
+                    formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    spinner.classList.add('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+            }
+
+            data.team_cool_name = document.querySelector("[name='team_cool_name']").value || '';
+            data.leader = { name: fullname, mobile, email };
+            data.members = members;
+            data.members_emails = members.map(m=>m.email);
+            data.members_mobiles = members.map(m=>m.mobile);
+            // store leader as top-level for compatibility
+            data.fullname = fullname;
+            data.email = email;
+            data.mobile = mobile;
+
+        } else {
+            // Non-team or single-member events: run legacy checks for the primary participant
+            // Check email
+            if (await emailExists(email)) {
+                formMessage.textContent = 'This email has already been used to register for an event. One entry per participant only.';
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Check mobile
+            if (await mobileExists(mobile)) {
+                formMessage.textContent = 'This mobile number has already been used to register for an event. One entry per participant only.';
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // include primary participant as single-member array for consistency
+            data.fullname = fullname;
+            data.email = email;
+            data.mobile = mobile;
+            data.members = [{ name: fullname, email, mobile }];
+            data.members_emails = [email];
+            data.members_mobiles = [mobile];
+
+            if (eventVal !== 'Digital Art Fiesta') {
+                data.team_cool_name = document.querySelector("[name='team_cool_name']").value;
+                // include optional member1 fields if present
+                const m1n = document.querySelector("[name='member1_name']").value.trim();
+                if (m1n) {
+                    const m1m = (document.querySelector("[name='member1_mobile']").value || '').replace(/\D/g,'');
+                    const m1e = (document.querySelector("[name='member1_email']").value || '').toLowerCase().trim();
+                    data.member1_name = m1n;
+                    data.member1_mobile = m1m;
+                    data.member1_email = m1e;
+                }
+                if (eventVal === 'Rainbow Rush') {
+                    data.member2_name = document.querySelector("[name='member2_name']").value;
+                    data.member2_mobile = document.querySelector("[name='member2_mobile']").value;
+                    data.member2_email = document.querySelector("[name='member2_email']").value;
+                }
+            }
+        }
+
+        // Generate registration token
+        const counterRef = doc(db, 'counters', 'registrationCounter');
+        let regNum;
+        await runTransaction(db, async (transaction) => {
+            const counterDoc = await transaction.get(counterRef);
+            if (!counterDoc.exists()) {
+                transaction.set(counterRef, { current: 0 });
+                regNum = 1;
+            } else {
+                const current = counterDoc.data().current || 0;
+                regNum = current + 1;
+                transaction.update(counterRef, { current: regNum });
+            }
+        });
+        const regNumStr = regNum.toString().padStart(4, '0');
+        const collegeCode = collegeCodes[data.college] || "OTHR";
+        const eventCode = eventCodes[data.event];
+        const token = collegeCode + eventCode + regNumStr;
+        data.token = token;
+
+await addDoc(regsRef, data);
+
+try {
+    const response = await fetch("http://localhost:3000/send-confirmation", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        console.error("Email API failed:", response.status);
+    }
+
+} catch (error) {
+    console.error("Email failed but registration saved:", error);
+}
+
+localStorage.setItem('registrationToken', token);
+window.location.href = "thankyou.html";
+
+    } catch (error) {
+        console.error(error);
+        formMessage.textContent = 'Error saving data. Please try again later.';
+        formMessage.className = 'text-center text-sm text-red-400 mb-4';
+        const submitBtn = form.querySelector("button[type='submit']");
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+        spinner.classList.add('hidden');
+    }
+
+});
+
+</script>
+</body>
+</html>

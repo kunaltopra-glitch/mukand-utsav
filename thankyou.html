@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Thank You</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black text-white flex items-center justify-center h-screen">
+
+<div class="text-center">
+<h1 class="text-4xl font-bold text-pink-500 mb-4">
+Thanks for being a part of Mukand Utsav
+</h1>
+
+<p class="text-lg text-gray-300 mb-6">
+(an inter-college event organized by MLN College Yamunanagar)
+</p>
+
+<div id="tokenDisplay" class="mb-6 hidden">
+<p class="text-xl text-yellow-400 mb-2">Your Registration Token:</p>
+<p class="text-2xl font-bold text-green-400" id="tokenValue"></p>
+</div>
+
+<a href="first.html"
+class="inline-block mt-8 px-6 py-3 bg-pink-500 rounded-full">
+Back to Home
+</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('registrationToken');
+    if (token) {
+        document.getElementById('tokenValue').textContent = token;
+        document.getElementById('tokenDisplay').classList.remove('hidden');
+        localStorage.removeItem('registrationToken'); // clear after display
+    }
+});
+</script>
+
+</body>
+</html>
