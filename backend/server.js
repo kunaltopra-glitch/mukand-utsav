@@ -114,7 +114,7 @@ app.post("/send-confirmation", async (req, res) => {
     res.json({ success: true });
 
   } catch (error) {
-    console.log(error);
+    console.log(error.response?.body || error);
     res.status(500).json({ success: false });
   }
 });
