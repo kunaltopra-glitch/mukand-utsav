@@ -12,6 +12,10 @@ const mailjetClient = mailjet.apiConnect(
   "1a5d13e4e1b4763d79a774e842b9d51f"
 );
 
+app.get("/", (req, res) => {
+  res.send("Backend is alive");
+});
+
 app.post("/send-confirmation", async (req, res) => {
   console.log("Request received:", req.body);
 
