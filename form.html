@@ -134,7 +134,7 @@ Mukand Utsav 2026 Registration
     <option>Documentary on Women Empowerment</option>
     <option>Rainbow Rush</option>
     <option>Science Exhibition</option>
-    <option>Ethnic Beads(Kandi Making)</option>
+    <option>Ethnic Beads</option>
 </select>
 
 
@@ -353,31 +353,39 @@ document.addEventListener('DOMContentLoaded', function() {
         const member2 = document.getElementById('member2');
         const member3 = document.getElementById('member3');
         const member4 = document.getElementById('member4');
-        
+
         // Hide all by default
         member1.classList.add('hidden');
         member2.classList.add('hidden');
         member3.classList.add('hidden');
         member4.classList.add('hidden');
 
+        // Digital Art Fiesta: solo
         if (selectedEvent === 'Digital Art Fiesta') {
             teamSection.classList.add('hidden');
+        // Antakshari: 1 leader + 4 members
+        } else if (selectedEvent === 'Antakshari – Holi Edition') {
+            teamSection.classList.remove('hidden');
+            member1.classList.remove('hidden');
+            member2.classList.remove('hidden');
+            member3.classList.remove('hidden');
+            member4.classList.remove('hidden');
+        // Rainbow Rush: 2 members (leader + 1 member)
+        } else if (selectedEvent === 'Rainbow Rush') {
+            teamSection.classList.remove('hidden');
+            member1.classList.remove('hidden');
+            member2.classList.remove('hidden');
+        // Science Exhibition, Ethnic Beads: 1 member only
+        } else if (selectedEvent === 'Science Exhibition' || selectedEvent === 'Ethnic Beads') {
+            teamSection.classList.remove('hidden');
+            member1.classList.remove('hidden');
+            member2.classList.add('hidden');
+            member3.classList.add('hidden');
+            member4.classList.add('hidden');
+        // Default: show team section for other events
         } else {
             teamSection.classList.remove('hidden');
-
-            // Antakshari requires 1 leader + 4 members
-            if (selectedEvent === 'Antakshari – Holi Edition') {
-                member1.classList.remove('hidden');
-                member2.classList.remove('hidden');
-                member3.classList.remove('hidden');
-                member4.classList.remove('hidden');
-            } else if (selectedEvent === 'Rainbow Rush') {
-                member1.classList.remove('hidden');
-                member2.classList.remove('hidden');
-            } else {
-                member1.classList.remove('hidden');
-                member2.classList.add('hidden');
-            }
+            member1.classList.remove('hidden');
         }
     });
 });
@@ -414,8 +422,8 @@ const eventCodes = {
     "Antakshari – Holi Edition": "03",
     "Documentary on Women Empowerment": "04",
     "Rainbow Rush": "05",
-    "Science Exhibition: "06",
-     "Ethnic Beads(Kandi Making)": "07"
+    "Science Exhibition": "06",
+    "Ethnic Beads": "07"
 };
 
 const form = document.getElementById("registrationForm");
@@ -567,6 +575,74 @@ form.addEventListener("submit", async (e) => {
             data.members = members;
             data.members_emails = members.map(m=>m.email);
             data.members_mobiles = members.map(m=>m.mobile);
+            // store leader as top-level for compatibility
+            data.fullname = fullname;
+            data.email = email;
+            data.mobile = mobile;
+
+        } else if (eventVal === 'Rainbow Rush' || eventVal === 'Science Exhibition' || eventVal === 'Ethnic Beads') {
+            // 1-member events (main participant + 1 member)
+            const m1 = document.querySelector("[name='member1_name']").value.trim();
+            const m1m = (document.querySelector("[name='member1_mobile']").value || '').replace(/\D/g,'');
+            const m1e = (document.querySelector("[name='member1_email']").value || '').toLowerCase().trim();
+
+            // require leader and 1 member's name/mobile/email
+            if (!fullname || !mobile || !email || !m1 || !m1m || !m1e) {
+                formMessage.textContent = eventVal + ' requires 1 team member. Please fill all details.';
+                formMessage.className = 'text-center text-sm text-yellow-300 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                return;
+            }
+
+            // Check duplicates for leader
+            if (await emailExists(email)) {
+                formMessage.textContent = `Email ${email} is already registered.`;
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            if (await mobileExists(mobile)) {
+                formMessage.textContent = `Mobile ${mobile} is already registered.`;
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Check duplicates for member
+            if (await emailExists(m1e)) {
+                formMessage.textContent = `Email ${m1e} is already registered.`;
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            if (await mobileExists(m1m)) {
+                formMessage.textContent = `Mobile ${m1m} is already registered.`;
+                formMessage.className = 'text-center text-sm text-red-400 mb-4';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                spinner.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            data.team_cool_name = document.querySelector("[name='team_cool_name']").value || '';
+            data.leader = { name: fullname, mobile, email };
+            data.members = [
+                { name: m1, mobile: m1m, email: m1e }
+            ];
+            data.members_emails = [m1e];
+            data.members_mobiles = [m1m];
             // store leader as top-level for compatibility
             data.fullname = fullname;
             data.email = email;
