@@ -106,6 +106,9 @@ h1,h2{font-family:'Poppins',sans-serif;}
 #collegeOther{
     background:#12121a;
 }
+/* When form has .event-closed, hide all children except those marked keep-visible */
+.event-closed > * { display: none !important; }
+.event-closed .keep-visible { display: block !important; }
 </style>
 </head>
 
@@ -273,6 +276,7 @@ class="glow-btn text-white font-bold py-3 px-10 rounded-full text-lg">
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const formMessage = document.getElementById('formMessage');
     const hiddenSelect = document.getElementById('collegeList');
     const collegeToggle = document.getElementById('collegeToggle');
     const collegeDropdown = document.getElementById('collegeDropdown');
@@ -348,6 +352,46 @@ document.addEventListener('DOMContentLoaded', function() {
     const eventSelect = document.querySelector('select[name="event"]');
     eventSelect.addEventListener('change', function() {
         const selectedEvent = this.value;
+        const form = document.getElementById('registrationForm');
+        // Keep the event select and its label visible even when hiding other fields
+        const eventSelectEl = this;
+        const eventLabelEl = eventSelectEl.previousElementSibling;
+
+        if (selectedEvent === 'Science Exhibition') {
+            formMessage.textContent = 'Registrations for this event are closed because entries are full.';
+            formMessage.className = 'text-center text-sm text-red-400 mb-4';
+
+            // mark keep-visible elements (event label, event select, and message)
+            eventSelectEl.classList.add('keep-visible');
+            if (eventLabelEl) eventLabelEl.classList.add('keep-visible');
+            formMessage.classList.add('keep-visible');
+
+            // add class to hide everything else
+            form.classList.add('event-closed');
+
+            // ensure submit button remains disabled/visually dimmed
+            const submitBtn = form.querySelector("button[type='submit']");
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            }
+
+            return; // skip other event-specific UI changes
+        } else {
+            // remove closed state and restore visibility
+            form.classList.remove('event-closed');
+            eventSelectEl.classList.remove('keep-visible');
+            if (eventLabelEl) eventLabelEl.classList.remove('keep-visible');
+            formMessage.classList.remove('keep-visible');
+            formMessage.textContent = '';
+            formMessage.className = 'text-center text-sm mb-4';
+
+            const submitBtn = form.querySelector("button[type='submit']");
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            }
+        }
         const teamSection = document.getElementById('teamSection');
         const member1 = document.getElementById('member1');
         const member2 = document.getElementById('member2');
