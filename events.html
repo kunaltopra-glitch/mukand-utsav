@@ -12,6 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // set this flag to true once you want to shut registrations for every event
+        // you can toggle dynamically based on date or some admin endpoint later
+        const allEventsClosed = false;
+        if (allEventsClosed) {
+            // redirect early so page doesn't flicker
+            window.location.href = 'events-closed.html';
+        }
         tailwind.config = {
             darkMode: 'class',
             theme: {
