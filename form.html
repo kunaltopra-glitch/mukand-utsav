@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const eventSelectEl = this;
         const eventLabelEl = eventSelectEl.previousElementSibling;
 
-        if (selectedEvent === 'Science Exhibition') {
+        if (selectedEvent === 'Science Exhibition' || selectedEvent === 'Rainbow Rush' || selectedEvent === 'Digital Art Fiesta') {
             formMessage.textContent = 'Registrations for this event are closed because entries are full.';
             formMessage.className = 'text-center text-sm text-red-400 mb-4';
 
